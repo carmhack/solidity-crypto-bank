@@ -24,7 +24,7 @@ function App() {
         address: accounts[0]
       });
       const CryptoBankContract = new ethers.Contract(
-        "0x651f9508bf5dF475E44D03620dEb24f50c6cFd01",
+        "0x83D824D4Ff16DAFCA2DA8CEdda0b2207969b6550",
         CryptoBank.abi,
         signer
       )
