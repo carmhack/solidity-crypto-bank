@@ -4,7 +4,6 @@ pragma solidity ^0.8.9;
 import "hardhat/console.sol";
 
 contract CryptoBank {
-    uint8 private clientCount;
     mapping (address => uint) private balances;
     address public owner;
 
@@ -14,7 +13,6 @@ contract CryptoBank {
     constructor() {
         /* Set the owner to the creator of this contract */
         owner = msg.sender;
-        clientCount = 0;
     }
 
     // Deposit ether into bank
@@ -40,7 +38,8 @@ contract CryptoBank {
     }
 
     /// Balance of CryptoBank contract
-    function depositsBalance() public view returns (uint) {
+    function totalBalance() public view returns (uint) {
+        require(msg.sender == owner);
         return address(this).balance;
     }
 }
