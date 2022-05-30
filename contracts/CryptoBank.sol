@@ -37,7 +37,7 @@ contract CryptoBank {
         return balances[msg.sender];
     }
 
-    /// Balance of CryptoBank contract
+    // Balance of CryptoBank contract
     function totalBalance() public view returns (uint) {
         require(msg.sender == owner);
         return address(this).balance;
