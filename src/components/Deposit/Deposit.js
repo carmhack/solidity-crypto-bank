@@ -14,9 +14,9 @@ function Deposit({ contract, address }) {
 
   return (
     <form onSubmit={deposit} className="box">
-      <h3 className="title is-3">Deposit</h3>
+      <h3 className="title is-3">Deposita</h3>
       <div className="field">
-        <label className="label">Value</label>
+        <label className="label">Ether</label>
         <div className="control">
           <input
             className="input"
@@ -31,7 +31,7 @@ function Deposit({ contract, address }) {
         </div>
       </div>
 
-      <button className="button is-primary">Deposit</button>
+      <button className="button is-info is-outlined">Invia richiesta</button>
     </form>
   )
 }

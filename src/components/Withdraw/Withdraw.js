@@ -11,9 +11,9 @@ function Withdraw({ contract, address }) {
 
   return (
     <form onSubmit={withdraw} className="box">
-      <h3 className="title is-3">Withdraw</h3>
+      <h3 className="title is-3">Preleva</h3>
       <div className="field">
-        <label className="label">Value</label>
+        <label className="label">Ether</label>
         <div className="control">
           <input
             className="input"
@@ -28,7 +28,7 @@ function Withdraw({ contract, address }) {
         </div>
       </div>
 
-      <button className="button is-primary">Withdraw</button>
+      <button className="button is-info is-outlined">Invia richiesta</button>
     </form>
   )
 }
