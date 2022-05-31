@@ -60,7 +60,7 @@ function App() {
           </p>
           <p className="subtitle">
             Un esempio di dApp fullstack<br/>
-            Il <a href="https://rinkeby.etherscan.io/address/0x83D824D4Ff16DAFCA2DA8CEdda0b2207969b6550" target="_blank">contratto</a> è sulla rete di test Rinkeby.
+            Il <a href="https://rinkeby.etherscan.io/address/0x83D824D4Ff16DAFCA2DA8CEdda0b2207969b6550" target="_blank" rel="noreferrer">contratto</a> è sulla rete di test Rinkeby.
           </p>
         </div>
       </section>
