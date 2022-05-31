@@ -19,7 +19,7 @@ Il contratto memorizza due informazioni:
     
 Sono presenti 4 metodi.
 
-##### Deposit
+#### Deposit
 ```js
 function deposit() public payable returns (uint) {
     balances[msg.sender] += msg.value;
@@ -30,7 +30,7 @@ function deposit() public payable returns (uint) {
 
 Il metodo aggiunge una quantità di ether al saldo dell'utente, emette un evento DepositMade e ritorna il saldo dell'utente. La funzione deve essere di tipo `payable`.
 
-##### Withdraw
+#### Withdraw
 ```js
 function withdraw(uint withdrawAmount) public returns (uint) {
     // Check enough balance available
@@ -44,7 +44,7 @@ function withdraw(uint withdrawAmount) public returns (uint) {
 
 Viene effettuato prima di tutto un controllo sul saldo: se il prelievo richiesto super il saldo, viene generato un errore. Se è possibile prelevare la somma, quest'ultima viene detratta dal saldo e inviata all'indirizzo che ha fatto la richiesta. Anche qui viene ritornato il saldo corrente.
 
-##### Balance
+#### Balance
 ```js
 function balance() public view returns (uint) {
     return balances[msg.sender];
@@ -53,7 +53,7 @@ function balance() public view returns (uint) {
 
 Ritorna il saldo dell'utente.
 
-##### Total balance
+#### Total balance
 ```js
 function totalBalance() public view returns (uint) {
     require(msg.sender == owner);
