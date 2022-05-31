@@ -6,8 +6,7 @@ function Withdraw({ contract, address }) {
 
   const withdraw = async (event) => {
     event.preventDefault();
-    const tx = await contract.withdraw(value * ether, { from: address });
-    // console.log(tx);
+    await contract.withdraw(value * ether, { from: address });
   }
 
   return (

@@ -6,11 +6,10 @@ function Deposit({ contract, address }) {
 
   const deposit = async (event) => {
     event.preventDefault();
-    const tx = await contract.deposit({
+    await contract.deposit({
       from: address,
       value: value * ether
     });
-    // console.log(tx);
   }
 
   return (

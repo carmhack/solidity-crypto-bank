@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { ethers } from "ethers";
 import "./App.css";
 import CryptoBank from "./artifacts/contracts/CryptoBank.sol/CryptoBank.json";
@@ -14,7 +14,7 @@ function App() {
     balance: null,
   });
 
-  const initConnection = async () => {
+  const initConnection = useCallback(async () => {
     if (typeof window.ethereum !== "undefined") {
       const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
       const provider = new ethers.providers.Web3Provider(window.ethereum);
@@ -32,17 +32,13 @@ function App() {
     } else {
       console.log("Please install MetaMask");
     }
-  }
+  }, [account])
 
   useEffect(() => {
     initConnection();
-  }, []);
+  }, [initConnection]);
 
-  useEffect(() => {
-    getBalance();
-  }, [contract]);
-
-  const getBalance = async () => {
+  const getBalance = useCallback(async () => {
     if (contract) {
       const wei = await contract.balance({ from: account.address });
       const newBalance = getEtherFrom(wei);
@@ -51,7 +47,11 @@ function App() {
         balance: newBalance
       });
     }
-  }
+  }, [account, contract])
+
+  useEffect(() => {
+    getBalance();
+  }, [contract, getBalance]);
 
   return (
     <div>
