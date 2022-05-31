@@ -13,7 +13,7 @@ function Deposit({ contract, address }) {
   }
 
   return (
-    <form onSubmit={deposit} className="box">
+    <form onSubmit={deposit} className="dashboard-item box">
       <h3 className="title is-3">Deposita</h3>
       <div className="field">
         <label className="label">Ether</label>

@@ -10,7 +10,7 @@ function Withdraw({ contract, address }) {
   }
 
   return (
-    <form onSubmit={withdraw} className="box">
+    <form onSubmit={withdraw} className="dashboard-item box">
       <h3 className="title is-3">Preleva</h3>
       <div className="field">
         <label className="label">Ether</label>

@@ -2,7 +2,7 @@ import "./Balance.css";
 
 function Balance({ balance, getBalance }) {
   return (
-    <div className="box">
+    <div className="dashboard-item box">
       <h3 className="title is-3">
         Saldo
         <span className="tag is-medium is-info" onClick={getBalance}>Ottieni</span>

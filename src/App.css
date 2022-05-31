@@ -12,3 +12,7 @@ main {
     height: calc(100vh - 350px);
     overflow-y: scroll;
 }
+
+.dashboard-item {
+    min-height: 200px;
+}
