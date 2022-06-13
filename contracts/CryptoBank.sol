@@ -4,11 +4,9 @@ pragma solidity ^0.8.9;
 import "hardhat/console.sol";
 
 contract CryptoBank {
-    mapping (address => uint) private balances;
+    mapping (address => uint256) private balances;
     address public owner;
-
-    // Event about a deposit being made by an address and its amount
-    event DepositMade(address indexed accountAddress, uint amount);
+    bool locked = false;
 
     constructor() {
         /* Set the owner to the creator of this contract */
@@ -16,29 +14,30 @@ contract CryptoBank {
     }
 
     // Deposit ether into bank
-    function deposit() public payable returns (uint) {
+    function deposit() public payable returns (uint256) {
         balances[msg.sender] += msg.value;
-        emit DepositMade(msg.sender, msg.value);
         return balances[msg.sender];
     }
 
     // Withdraw ether from bank
-    function withdraw(uint withdrawAmount) public returns (uint currentBalance) {
+    function withdraw(uint256 amount) public returns (uint256) {
+        require(!locked, "Reentrant call detected!");
+        locked = true;
         // Check enough balance available, otherwise just return balance
-        if (withdrawAmount <= balances[msg.sender]) {
-            balances[msg.sender] -= withdrawAmount;
-            payable(msg.sender).transfer(withdrawAmount);
-        }
+        require(amount <= balances[msg.sender]);
+        (bool success, ) = payable(msg.sender).call{ value: amount }("");
+        require(success, "Transfer failed.");
+        locked = false;
         return balances[msg.sender];
     }
 
     // Reads balance of the account requesting
-    function balance() public view returns (uint) {
+    function balance() public view returns (uint256) {
         return balances[msg.sender];
     }
 
     // Balance of CryptoBank contract
-    function totalBalance() public view returns (uint) {
+    function totalBalance() public view returns (uint256) {
         require(msg.sender == owner);
         return address(this).balance;
     }
