@@ -1,33 +1,43 @@
-import { useCallback, useEffect } from "react";
-import Balance from "../Balance/Balance";
+import { useEffect, useState } from "react";
+import { ethers } from "ethers";
+import CustomerBalance from "../Balance/CustomerBalance";
 import Deposit from "../Deposit/Deposit";
 import Withdraw from "../Withdraw/Withdraw";
-import { getEtherFrom } from "../../utils/format";
 import AddressInfo from "../AddressInfo/AddressInfo";
+import CryptoBankContract from "../../artifacts/contracts/CryptoBank.sol/CryptoBank.json";
+import { getEtherFrom } from "../../utils/format";
 
-function Dashboard({ contract, account, setAccount }) {
-  const getBalance = useCallback(async () => {
-    if (contract) {
-      const wei = await contract.balance({ from: account.address });
-      const newBalance = getEtherFrom(wei);
-      setAccount({
-        ...account,
-        balance: newBalance
-      });
+function Dashboard({ account }) {
+  const [addressBalance, setAddressBalance] = useState(null);
+
+  const contractAddress = "0xd5325FA2a17541cF6f539DCA9A8d048Cb65Bf001";
+  const abi = CryptoBankContract.abi;
+
+  const getBalance = async () => {
+    try {
+      if (window.ethereum) {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const CryptoBankContract = new ethers.Contract(contractAddress, abi, signer);
+
+        const wei = await CryptoBankContract.balance({ from: account.address });
+        setAddressBalance(getEtherFrom(wei));
+      }
+    } catch (error) {
+      console.log('error');
     }
-  }, [account, contract, setAccount])
+  }
 
   useEffect(() => {
     getBalance();
-  }, [contract, getBalance]);
+  }, []);
 
   return (
     <section className="section">
       <div className="columns">
         <div className="column">
-          <Balance
-            balance={account.balance}
-            getBalance={getBalance}
+          <CustomerBalance
+            balance={addressBalance}
           />
         </div>
         <div className="column">
@@ -40,14 +50,14 @@ function Dashboard({ contract, account, setAccount }) {
       <div className="columns">
         <div className="column">
           <Deposit
-            contract={contract}
             address={account.address}
+            getBalance={getBalance}
           />
         </div>
         <div className="column">
           <Withdraw
-            contract={contract}
             address={account.address}
+            getBalance={getBalance}
           />
         </div>
       </div>

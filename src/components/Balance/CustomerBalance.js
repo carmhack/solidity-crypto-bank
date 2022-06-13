@@ -1,11 +1,10 @@
-import "./Balance.css";
+import "./CustomerBalance.css";
 
-function Balance({ balance, getBalance }) {
+function CustomerBalance({ balance }) {
   return (
     <div className="dashboard-item box">
       <h3 className="title is-3">
         Saldo
-        <span className="tag is-medium is-info" onClick={getBalance}>Ottieni</span>
       </h3>
       <div className="block">
         <h4 className="subtitle is-4">
@@ -16,4 +15,4 @@ function Balance({ balance, getBalance }) {
   )
 }
 
-export default Balance;
+export default CustomerBalance;

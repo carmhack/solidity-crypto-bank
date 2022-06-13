@@ -1,6 +1,6 @@
-import { ethers } from "ethers";
+import { utils } from "ethers";
 
 export const getEtherFrom = (wei) => {
     // const weiString = BigNumber.from(wei).toString();
-    return ethers.utils.formatEther(wei);
+    return utils.formatEther(wei);
 }

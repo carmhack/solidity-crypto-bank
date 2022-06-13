@@ -1,19 +1,37 @@
 import { useState } from "react";
+import { ethers } from "ethers";
+import CryptoBankContract from "../../artifacts/contracts/CryptoBank.sol/CryptoBank.json";
 
-function Deposit({ contract, address }) {
+function Deposit({ address, getBalance }) {
   const ether = 10**18;
   const [value, setValue] = useState(0.00001);
 
-  const deposit = async (event) => {
-    event.preventDefault();
-    await contract.deposit({
-      from: address,
-      value: value * ether
-    });
+  const contractAddress = "0xd5325FA2a17541cF6f539DCA9A8d048Cb65Bf001";
+  const abi = CryptoBankContract.abi;
+
+  const depositMoney = async (event) => {
+    try {
+      event.preventDefault();
+      if (window.ethereum) {
+        const provider = new ethers.providers.Web3Provider(window.ethereum);
+        const signer = provider.getSigner();
+        const CryptoBankContract = new ethers.Contract(contractAddress, abi, signer);
+
+        const tx = await CryptoBankContract.deposit({
+          from: address,
+          value: value * ether
+        });
+        await tx.wait();
+
+        getBalance();
+      }
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (
-    <form onSubmit={deposit} className="dashboard-item box">
+    <form onSubmit={depositMoney} className="dashboard-item box">
       <h3 className="title is-3">Deposita</h3>
       <div className="field">
         <label className="label">Ether</label>
@@ -26,12 +44,12 @@ function Deposit({ contract, address }) {
             step="0.00001"
             value={value}
             onChange={(e) => setValue(e.target.value)}
-            placeholder="e.g. 10"
+            placeholder="0.00001"
           />
         </div>
       </div>
 
-      <button className="button is-info is-outlined">Invia richiesta</button>
+      <button className="button is-info is-outlined">Deposita</button>
     </form>
   )
 }

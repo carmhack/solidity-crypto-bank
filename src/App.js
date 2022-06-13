@@ -1,55 +1,42 @@
-import { useState, useCallback } from "react";
-import { ethers } from "ethers";
+import { useState, useEffect } from "react";
 import "./App.css";
-import CryptoBank from "./artifacts/contracts/CryptoBank.sol/CryptoBank.json";
 import Login from "./components/Login/Login";
 import Dashboard from "./components/Dashboard/Dashboard";
 
 function App() {
-  const [contract, setContract] = useState(null);
+  const [isWalletConnected, setIsWalletConnected] = useState(false);
+  const [error, setError] = useState(null);
   const [account, setAccount] = useState({
     address: null,
-    addressBalance: null,
-    balance: null,
   });
 
-  const initConnection = useCallback(async () => {
-    if (typeof window.ethereum !== "undefined") {
-      const accounts = await window.ethereum.request({ method: "eth_requestAccounts" });
-      const addressBalance = await window.ethereum.request({ method: "eth_getBalance", params: [accounts[0], 'latest'] });
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
-      const signer = provider.getSigner();
-      setAccount({
-        ...account,
-        addressBalance,
-        address: accounts[0]
-      });
-      const CryptoBankContract = new ethers.Contract(
-        "0x83D824D4Ff16DAFCA2DA8CEdda0b2207969b6550",
-        CryptoBank.abi,
-        signer
-      )
-      setContract(CryptoBankContract);
-    } else {
-      console.log("Please install MetaMask");
-    }
-  }, [account]);
+  const contractAddress = "0xd5325FA2a17541cF6f539DCA9A8d048Cb65Bf001";
 
-  const checkAccount = () => {
-    if (!contract && !account.address) {
-      return (
-        <Login connect={initConnection} />
-      );
-    } else {
-      return (
-        <Dashboard
-          account={account}
-          contract={contract}
-          setAccount={setAccount}
-        />
-      );
+  const checkIfWalletIsConnected = async () => {
+    try {
+      if (window.ethereum) {
+        const accounts = await window.ethereum.request({
+          method: 'eth_requestAccounts'
+        })
+        const address = accounts[0];
+        setIsWalletConnected(true);
+        setAccount({
+          ...account,
+          address
+        });
+        console.log("Account Connected: ", address);
+      } else {
+        setError("Please install a MetaMask wallet to use our bank.");
+        console.log("No Metamask detected");
+      }
+    } catch (error) {
+      console.log(error);
     }
   }
+
+  useEffect(() => {
+    checkIfWalletIsConnected();
+  }, [])
 
   return (
     <div>
@@ -60,13 +47,17 @@ function App() {
           </p>
           <p className="subtitle">
             Un esempio di dApp fullstack<br/>
-            Il <a href="https://rinkeby.etherscan.io/address/0x83D824D4Ff16DAFCA2DA8CEdda0b2207969b6550" target="_blank" rel="noreferrer">contratto</a> è sulla rete di test Rinkeby.
+            Il <a href={`https://rinkeby.etherscan.io/address/${contractAddress}`} target="_blank" rel="noreferrer">contratto</a> è sulla rete di test Rinkeby.
           </p>
         </div>
       </section>
 
       <main>
-        { checkAccount() }
+        { !account.address && <Login /> }
+        {
+          account.address &&
+          <Dashboard account={account} />
+        }
       </main>
     </div>
   );

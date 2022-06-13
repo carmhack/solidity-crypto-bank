@@ -6,7 +6,6 @@ function AddressInfo({ account }) {
       </h3>
       <div className="content">
         <p>Indirizzo<br/>{ account.address }</p>
-        <p>Saldo: { account.balance }</p>
       </div>
     </div>
   )
