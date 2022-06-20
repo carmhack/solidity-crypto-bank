@@ -31,6 +31,7 @@ function deposit() public payable returns (uint) {
 Il metodo aggiunge una quantità di ether al saldo dell'utente, emette un evento DepositMade e ritorna il saldo dell'utente. La funzione deve essere di tipo `payable`.
 
 #### Withdraw
+##### Vecchia versione
 ```js
 function withdraw(uint withdrawAmount) public returns (uint) {
     // Check enough balance available
@@ -42,7 +43,26 @@ function withdraw(uint withdrawAmount) public returns (uint) {
 }
 ```
 
-Viene effettuato prima di tutto un controllo sul saldo: se il prelievo richiesto super il saldo, viene generato un errore. Se è possibile prelevare la somma, quest'ultima viene detratta dal saldo e inviata all'indirizzo che ha fatto la richiesta. Anche qui viene ritornato il saldo corrente.
+##### Nuova versione
+```js
+function withdraw(uint256 amount) public returns (uint256) {
+    require(!locked, "Reentrant call detected!");
+    require(amount <= balances[msg.sender]);
+    locked = true;
+    (bool success, ) = payable(msg.sender).call{ value: amount }("");
+    require(success, "Transfer failed.");
+    locked = false;
+    return balances[msg.sender];
+}
+```
+
+Prima di effettuare il prelievo vengono effettuati due controlli:
+- se il prelievo richiesto è disponibile
+- viene verificato che la variabile `locked` sia settata a `false`
+
+Questa variabile `locked` serve ad evitare quella che viene chiamata [Reentrancy](https://consensys.net/diligence/blog/2019/09/stop-using-soliditys-transfer-now/).
+
+Se è possibile prelevare la somma, quest'ultima viene detratta dal saldo e inviata all'indirizzo che ha fatto la richiesta. Anche qui viene ritornato il saldo corrente.
 
 #### Balance
 ```js
